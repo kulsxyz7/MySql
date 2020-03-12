@@ -1,0 +1,142 @@
+a quick preview
+Find All Users Who Are 18 or older
+code :
+SELECT * FROM Users WHERE Age >= 18;
+
+the general command for creating a database :
+CREATE DATABASE <name>;
+
+example :
+CREATE DATABASE soap_store;
+CREATE DATABASE DogApp;
+CREATE DATABASE My_App;
+
+jangan pakai spasi
+
+start the CLI : 
+mysql-ctl cli;
+
+List available databases:
+show databases;
+
+cara delete database 
+DROP DATABASE <name>;
+example : 
+DROP DATABASE hello_world_db;
+
+cara menggunakan database: 
+USE <database name>;
+dan kita bisa pindah ke database yg lain
+example :
+USE dog_walking_app;
+
+SELECT database();
+
+a databases is just a bunch of tables
+
+Numeric Types in Database :
+- INT
+- SMALLINT
+- TINYINT
+- MEDIUMINT
+- BIGINT
+- DECIMAL
+- NUMERIC
+- FLOAT
+- DOUBLE
+- BIT
+
+String Types in Database : 
+- CHAR
+- VARCHAR
+- BINARY
+- VARBINARY
+- BLOB
+- TINYBLOB
+- MEDIUMBLOB
+- LONGBLOB
+- TEXT
+- TINYTEXT
+- MEDIUMTEXT
+- LONGTEXT
+- ENUM
+
+Date Types in Database : 
+- DATE
+- DATETIME
+- TIMESTAMP
+- TIME
+- YEAR
+
+INT is a Whole Number with a max value of 4294967295
+VARCHAR is a Variable-Length string between 1 and 255 characters
+
+cara buat table 
+CREATE TABLE <NAMA>();
+example : 
+CREATE TABLE tablename 
+ (
+	column_name data_type,
+	column_name data_type
+ );
+
+CREATE TABLES cats
+ (
+	name VARCHAR(100),
+	age INT
+ );
+
+cara cek table di database
+
+    SHOW TABLES;
+example :
+SHOW TABLES cats;
+     
+    SHOW COLUMNS FROM tablename;
+example :
+SHOW COLUMN FROM cats;
+	
+cara gampang nya menggunakan DESC <tablename>;     
+    DESC tablename;
+example :
+DESC cats;
+
+cara delete Table 
+
+DROP TABLE <tablename>;
+example :
+DROP TABLE cats;
+
+NOTE : Be careful with this command !!
+
+INSERT 
+adding data to your tables !
+syntax nya :
+INSERT INTO <tablename> (variable yg ada didalam table)
+VALUES (isi variable yg digunakan);
+
+example: 
+INSERT INTO cats (name, age)
+VALUES ('Jetson', 7);
+
+
+Inserting Data
+
+
+The "formula":
+
+    INSERT INTO table_name(column_name) VALUES (data);
+
+For example:
+
+    INSERT INTO cats(name, age) VALUES ('Jetson', 7);
+
+SELECT * FROM cats;
+
+CODE: Multiple Insert
+
+    INSERT INTO table_name 
+                (column_name, column_name) 
+    VALUES      (value, value), 
+                (value, value), 
+                (value, value);
