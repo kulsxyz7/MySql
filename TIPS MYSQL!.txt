@@ -1160,3 +1160,157 @@ CODE: Using Min and Max with Group By
     FROM books
     GROUP BY author_lname,
              author_fname;
+
+CODE: The Sum Function
+
+
+CODE: Aggregate Functions Challenges Solution
+
+    SELECT COUNT(*) FROM books;
+     
+    SELECT COUNT(*) FROM books GROUP BY released_year;
+     
+    SELECT released_year, COUNT(*) FROM books GROUP BY released_year;
+     
+    SELECT Sum(stock_quantity) FROM BOOKS;
+     
+    SELECT AVG(released_year) FROM books GROUP BY author_lname, author_fname;
+     
+    SELECT author_fname, author_lname, AVG(released_year) FROM books GROUP BY author_lname, author_fname;
+     
+    SELECT CONCAT(author_fname, ' ', author_lname) FROM books
+    WHERE pages = (SELECT Max(pages) FROM books);
+     
+    SELECT CONCAT(author_fname, ' ', author_lname) FROM books
+    ORDER BY pages DESC LIMIT 1;
+     
+    SELECT pages, CONCAT(author_fname, ' ', author_lname) FROM books
+    ORDER BY pages DESC;
+     
+    SELECT released_year AS year,
+        COUNT(*) AS '# of books',
+        AVG(pages) AS 'avg pages'
+    FROM books
+        GROUP BY released_year;
+
+    SELECT SUM(pages)
+    FROM books;
+     
+    SELECT SUM(released_year) FROM books;
+     
+    SELECT author_fname,
+           author_lname,
+           Sum(pages)
+    FROM books
+    GROUP BY
+        author_lname,
+        author_fname;
+     
+    SELECT author_fname,
+           author_lname,
+           Sum(released_year)
+    FROM books
+    GROUP BY
+        author_lname,
+        author_fname;
+
+
+CODE: The Avg Function
+
+    SELECT AVG(released_year) 
+    FROM books;
+     
+    SELECT AVG(pages) 
+    FROM books;
+     
+    SELECT AVG(stock_quantity) 
+    FROM books 
+    GROUP BY released_year;
+     
+    SELECT released_year, AVG(stock_quantity) 
+    FROM books 
+    GROUP BY released_year;
+     
+    SELECT author_fname, author_lname, AVG(pages) FROM books
+    GROUP BY author_lname, author_fname;
+
+VARCHAR and CHAR what's the difference?
+CHAR has a fixed length
+example = CHAR(3) -> Only 3 3 Characters Allowed.
+
+The length of a CHAR column is fixed to the 
+length that you declare when you create the table. 
+The length can be any value from 0 to 255. 
+When CHAR values are stored, they are right-padded 
+with spaces to the specified length. When CHAR 
+values are retrieved, trailing spaces are removed 
+unless the PAD_CHAR_TO_FULL_LENGTH SQL mode is enabled.
+
+CHAR is faster for fixed length text
+more example for using CHAR
+
+
+State Abbreviations: CA, NY
+
+Yes/No Flags: Y/N
+
+Sex: M/F
+
+
+
+CODE: DECIMAL
+
+    CREATE TABLE items(price DECIMAL(5,2));
+     
+    INSERT INTO items(price) VALUES(7);
+     
+    INSERT INTO items(price) VALUES(7987654);
+     
+    INSERT INTO items(price) VALUES(34.88);
+     
+    INSERT INTO items(price) VALUES(298.9999);
+     
+    INSERT INTO items(price) VALUES(1.9999);
+     
+    SELECT * FROM items;
+
+
+
+CODE: FLOAT and DOUBLE
+
+    CREATE TABLE thingies (price FLOAT);
+     
+    INSERT INTO thingies(price) VALUES (88.45);
+     
+    SELECT * FROM thingies;
+     
+    INSERT INTO thingies(price) VALUES (8877.45);
+     
+    SELECT * FROM thingies;
+     
+    INSERT INTO thingies(price) VALUES (8877665544.45);
+     
+    SELECT * FROM thingies;
+
+use DECIMAL instead of float or double if we need gigantic number, because we can control the number 
+
+
+DATE values with a date but no time
+the format is 'YYYY-MM-DD' 
+TIME values with a time but no date
+the format is 'HH:MM:SS'
+
+DATETIME Values with a Date AND Time
+the format is 'YYYY-MM-DD HH:MM:SS'
+
+CODE: Creating Our DATE data
+
+    CREATE TABLE people (name VARCHAR(100), birthdate DATE, birthtime TIME, birthdt DATETIME);
+     
+    INSERT INTO people (name, birthdate, birthtime, birthdt)
+    VALUES('Padma', '1983-11-11', '10:07:35', '1983-11-11 10:07:35');
+     
+    INSERT INTO people (name, birthdate, birthtime, birthdt)
+    VALUES('Larry', '1943-12-25', '04:10:42', '1943-12-25 04:10:42');
+     
+    SELECT * FROM people;
