@@ -2659,3 +2659,259 @@ export MYSQL_PW='your-password-here'
 If you want the password to persist as an environment variable then checkout the dotenv npm package, otherwise you will need to export the variable every time you open a new terminal window.
 
 
+CODE: Creating Our Users Table
+Simple SQL To Create The Users Table
+
+    CREATE TABLE users (
+        email VARCHAR(255) PRIMARY KEY,
+        created_at TIMESTAMP DEFAULT NOW()
+    );
+
+
+CODE: Selecting Using Node
+
+Insert users (from command line):
+
+    INSERT INTO users (email) VALUES('Katie34@yahoo.com'), ('Tunde@gmail.com');
+
+Check that users are added:
+
+    SELECT * FROM users;
+
+To SELECT all users from database:
+
+    var q = 'SELECT * FROM users ';
+    connection.query(q, function (error, results, fields) {
+      if (error) throw error;
+      console.log(results);
+    });
+
+To count the number of users in the database:
+
+    var q = 'SELECT COUNT(*) AS total FROM users ';
+    connection.query(q, function (error, results, fields) {
+      if (error) throw error;
+      console.log(results[0].total);
+    });
+
+
+CODE: Inserting Using Node
+Inserting Data Using Node
+
+Approach #1
+
+    var q = 'INSERT INTO users (email) VALUES ("rusty_the_dog@gmail.com")';
+     
+    connection.query(q, function (error, results, fields) {
+      if (error) throw error;
+      console.log(results);
+    });
+
+
+An easier approach that allows for dynamic data
+
+
+    var person = {
+        email: faker.internet.email(),
+        created_at: faker.date.past()
+    };
+     
+    var end_result = connection.query('INSERT INTO users SET ?', person, function(err, result) {
+      if (err) throw err;
+      console.log(result);
+    });
+
+
+
+
+CODE: Bulk Inserting 500 Users
+The Code To INSERT 500 Random Users
+
+    var mysql = require('mysql');
+    var faker = require('faker');
+     
+     
+    var connection = mysql.createConnection({
+      host     : 'localhost',
+      user     : 'learnwithcolt',
+      database : 'join_us'
+    });
+     
+     
+    var data = [];
+    for(var i = 0; i < 500; i++){
+        data.push([
+            faker.internet.email(),
+            faker.date.past()
+        ]);
+    }
+     
+     
+    var q = 'INSERT INTO users (email, created_at) VALUES ?';
+     
+    connection.query(q, [data], function(err, result) {
+      console.log(err);
+      console.log(result);
+    });
+     
+    connection.end();
+
+
+
+CODE: 500 Users Exercises Solutions
+Solutions To 500 Users Exercises
+
+-- Challenge 1
+
+    SELECT 
+        DATE_FORMAT(MIN(created_at), "%M %D %Y") as earliest_date 
+    FROM users;
+
+-- Challenge 2
+
+    SELECT * 
+    FROM   users 
+    WHERE  created_at = (SELECT Min(created_at) 
+                         FROM   users); 
+
+-- Challenge 3
+
+    SELECT Monthname(created_at) AS month, 
+           Count(*)              AS count 
+    FROM   users 
+    GROUP  BY month 
+    ORDER  BY count DESC; 
+
+-- Challenge 4
+
+    SELECT Count(*) AS yahoo_users 
+    FROM   users 
+    WHERE  email LIKE '%@yahoo.com'; 
+
+-- Challenge 5
+
+    SELECT CASE 
+             WHEN email LIKE '%@gmail.com' THEN 'gmail' 
+             WHEN email LIKE '%@yahoo.com' THEN 'yahoo' 
+             WHEN email LIKE '%@hotmail.com' THEN 'hotmail' 
+             ELSE 'other' 
+           end      AS provider, 
+           Count(*) AS total_users 
+    FROM   users 
+    GROUP  BY provider 
+    ORDER  BY total_users DESC; 
+
+
+
+CODE: Our First Simple Web App
+CODE: Our First Simple Web App:
+
+Add to your app.js file:
+
+    var express = require('express');
+     
+    var app = express();
+     
+    app.get("/", function(req, res){
+     res.send("HELLO FROM OUR WEB APP!");
+    });
+     
+    app.listen(8080, function () {
+     console.log('App listening on port 8080!');
+    });
+
+Remember to start the server up:
+
+node app.js 
+
+
+
+CODE: Adding Multiple Routes
+CODE: Adding Multiple Routes
+
+Add a /joke route:
+
+    app.get("/joke", function(req, res){
+     var joke = "What do you call a dog that does magic tricks? A labracadabrador.";
+     res.send(joke);
+    });
+
+Add a /random_num route:
+
+    app.get("/random_num", function(req, res){
+     var num = Math.floor((Math.random() * 10) + 1);
+     res.send("Your lucky number is " + num);
+    });
+
+
+CODE: Connecting Express and MySQL
+CODE: Connecting Express and MySQL
+
+Add the MySQL code inside of the root route:
+
+    app.get("/", function(req, res){
+     var q = 'SELECT COUNT(*) as count FROM users';
+     connection.query(q, function (error, results) {
+     if (error) throw error;
+     var msg = "We have " + results[0].count + " users";
+     res.send(msg);
+     });
+    });
+
+
+CODE: Adding EJS Templates
+
+CODE: Adding EJS Templates
+
+
+    <h1>JOIN US</h1>
+     
+    <p class="lead">Enter your email to join <strong><%= count %></strong> 
+    others on our waitlist. We are 100% not a cult. </p>
+     
+    <form method="POST" action='/register'>
+     <input type="text" class="form" placeholder="Enter Your Email">
+     <button>Join Now</button>
+    </form>
+
+CODE: Connecting the Form
+CODE: Connecting the Form
+
+The '/register' post route:
+
+    app.post('/register', function(req,res){
+     var person = {email: req.body.email};
+     connection.query('INSERT INTO users SET ?', person, function(err, result) {
+     console.log(err);
+     console.log(result);
+     res.redirect("/");
+     });
+    });
+
+
+CODE: HTML AND CSS FILES
+JOIN US: HTML AND CSS FILES
+
+Download the attached zip file containing the completed HTML and CSS.
+Resources for this lecture
+
+    JOIN_US_HTML_AND_CSS.zip
+
+
+DATABASE TRIGGER !!
+
+
+DELIMITER $$
+
+CREATE TRIGGER must_be_adult
+     BEFORE INSERT ON users FOR EACH ROW
+     BEGIN
+          IF NEW.age < 18
+          THEN
+              SIGNAL SQLSTATE '45000'
+                    SET MESSAGE_TEXT = 'Must be an adult!';
+          END IF;
+     END;
+$$
+
+DELIMITER ;
